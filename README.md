@@ -117,3 +117,88 @@ Compare KNN against other simple algorithms (Decision Tree, Logistic Regression)
 Test the model on a completely new, unseen dataset
 Add k-fold cross-validation for more robust evaluation
 
+
+Overview of project 3 
+
+
+Tech Stack Recommender
+
+Project 3 Capstone — DecodeLabs AI Engineering Track AI Recommendation Logic using Content-Based Filtering
+
+Overview
+
+This project maps a user's raw skills and career interests to the most relevant tech job roles using Content-Based Filtering — one of the two core methodologies in recommendation systems (the other being Collaborative Filtering).
+
+Instead of relying on other users' behavior, this engine matches a user's profile directly against the intrinsic attributes (skill tags) of each job role using:
+
+TF-IDF (Term Frequency–Inverse Document Frequency) for feature weighting
+Cosine Similarity for measuring alignment between the user and each role
+
+No external ML libraries are used — both algorithms are implemented from scratch so the underlying math stays visible.
+
+How It Works — The IPO Pipeline
+Stage	Description
+1. Ingestion	Capture user input — a minimum of 3 skills/interests (e.g. ["Python", "Cloud Computing", "Automation"])
+2. Vectorization	Convert each job role's skill list and the user's skills into TF-IDF weighted vectors over a shared vocabulary
+3. Scoring	Calculate Cosine Similarity between the user vector and every job-role vector
+4. Sorting	Rank all roles by similarity score, highest first
+5. Filtering	Truncate to the Top-N most relevant roles (default: Top 3)
+Why TF-IDF + Cosine Similarity?
+TF-IDF penalizes generic, high-frequency skills (e.g. "Git") and rewards specific, descriptive ones (e.g. "TensorFlow"), avoiding the flaw of simple binary overlap matching.
+Cosine Similarity measures the angle between vectors rather than raw distance, making it immune to vector magnitude — a role with a longer skill list isn't unfairly penalized against a shorter one.
+File Structure
+tech_stack_recommender.py   # Main script
+raw_skills.csv               # (Optional) your own dataset — auto-loaded if present
+README.md                    # This file
+Dataset Format
+
+If you provide your own raw_skills.csv in the same folder, it will be loaded automatically. Expected format:
+
+csv
+role_name,skills
+Data Scientist,Python;SQL;Machine Learning;Data Analysis;Statistics
+DevOps Engineer,AWS;Docker;Kubernetes;CI/CD;Automation
+role_name — the job title (treated as an "item" in the recommendation engine)
+skills — semicolon-separated skill tags for that role
+
+If no raw_skills.csv is found, the script falls back to a built-in sample dataset of 8 common tech roles so it runs out of the box.
+
+Usage
+bash
+python tech_stack_recommender.py
+Example Output
+User input skills: ['Python', 'Cloud Computing', 'Automation']
+
+Top recommended career paths:
+  1. Cloud Architect              similarity = 0.3345 (33.5% match)
+  2. Systems Administrator        similarity = 0.2838 (28.4% match)
+  3. DevOps Engineer              similarity = 0.2618 (26.2% match)
+Using It in Your Own Code
+python
+from tech_stack_recommender import recommend_tech_stack, sample_job_roles
+
+job_roles = sample_job_roles()  # or load_job_roles_from_csv("raw_skills.csv")
+results = recommend_tech_stack(
+    user_skills=["Java", "SQL", "APIs"],
+    job_roles=job_roles,
+    top_n=3
+)
+
+for role, score in results:
+    print(role, score)
+Key Functions
+Function	Purpose
+load_job_roles_from_csv(path)	Loads job roles + skills from a CSV file
+build_vocabulary(documents)	Builds the shared skill vocabulary across all roles + user input
+compute_tf(doc_tags, vocabulary)	Calculates Term Frequency for a document
+compute_idf(documents, vocabulary)	Calculates Inverse Document Frequency across all documents
+tfidf_vector(doc_tags, vocabulary, idf)	Combines TF and IDF into a weighted vector
+cosine_similarity(vec_a, vec_b)	Measures similarity between two vectors
+recommend_tech_stack(user_skills, job_roles, top_n)	Runs the full ingestion → scoring → sorting → filtering pipeline
+Known Limitation: The Cold Start Problem
+
+If a user's skills share zero overlap with the vocabulary of any job role, all similarity scores default to 0.0 (handled gracefully via a guard in cosine_similarity, rather than crashing). Common mitigations, per the project's design notes:
+
+Onboarding surveys — force an initial skill selection
+Trending fallbacks — recommend popular/general roles until more data is available
+Metadata inference — use other available signals (e.g. field of study) to bootstrap a starting profile
