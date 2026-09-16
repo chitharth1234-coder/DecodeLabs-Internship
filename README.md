@@ -207,6 +207,7 @@ Metadata inference — use other available signals (e.g. field of study) to boot
 
 A React component that renders a timezone dropdown selector with a live preview chip, built with Tailwind CSS and lucide-react icons.
 
+ overview of projecct 4
 ## Preview
 
 - A labeled dropdown ("What is your timezone?") listing common UTC offsets
@@ -276,7 +277,3 @@ Open the printed local URL (usually `http://localhost:5173`) in your browser.
 
 - Edit the `TIMEZONES` array in `TimezoneSelector.jsx` to add, remove, or reorder timezone options.
 - Styling uses Tailwind utility classes directly in the component — adjust classes like `border-slate-200`, `rounded-xl`, or `text-slate-700` to match your design system.
-
-## Quick Preview (no local setup)
-
-Paste the component code into CodeSandbox or StackBlitz using their React template, add `lucide-react` as a dependency, and it will run instantly in the browser.
