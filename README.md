@@ -202,3 +202,81 @@ If a user's skills share zero overlap with the vocabulary of any job role, all s
 Onboarding surveys — force an initial skill selection
 Trending fallbacks — recommend popular/general roles until more data is available
 Metadata inference — use other available signals (e.g. field of study) to bootstrap a starting profile
+
+# TimezoneSelector
+
+A React component that renders a timezone dropdown selector with a live preview chip, built with Tailwind CSS and lucide-react icons.
+
+## Preview
+
+- A labeled dropdown ("What is your timezone?") listing common UTC offsets
+- A small chip below it showing a globe icon and the currently selected timezone
+
+## Requirements
+
+- Node.js v18 or later
+- React 18+
+- Tailwind CSS
+- `lucide-react` (for icons)
+
+## Installation
+
+1. **Create a React project** (skip if you already have one):
+```bash
+   npm create vite@latest my-app -- --template react
+   cd my-app
+```
+
+2. **Install dependencies:**
+```bash
+   npm install
+   npm install lucide-react
+```
+
+3. **Set up Tailwind CSS:**
+```bash
+   npm install tailwindcss @tailwindcss/vite
+```
+   Then follow Tailwind's Vite setup guide to wire it into `vite.config.js` and your main CSS file.
+
+4. **Add the component:**
+   Copy `TimezoneSelector.jsx` into your project's `src/` folder.
+
+## Usage
+
+```jsx
+import TimezoneSelector from "./TimezoneSelector";
+
+function App() {
+  return (
+    <div className="p-8">
+      <TimezoneSelector />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Run the dev server:
+
+```bash
+npm run dev
+```
+
+Open the printed local URL (usually `http://localhost:5173`) in your browser.
+
+## Props
+
+| Prop           | Type   | Default      | Description                          |
+|----------------|--------|--------------|---------------------------------------|
+| `defaultValue` | string | `"UTC 0:00"` | The timezone label selected on load. |
+
+## Customization
+
+- Edit the `TIMEZONES` array in `TimezoneSelector.jsx` to add, remove, or reorder timezone options.
+- Styling uses Tailwind utility classes directly in the component — adjust classes like `border-slate-200`, `rounded-xl`, or `text-slate-700` to match your design system.
+
+## Quick Preview (no local setup)
+
+Paste the component code into CodeSandbox or StackBlitz using their React template, add `lucide-react` as a dependency, and it will run instantly in the browser.
